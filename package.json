@@ -1,0 +1,19 @@
+{
+  "name": "whatsgoodhere",
+  "version": "1.0.0",
+  "description": "A lightweight clone of Yelp using ReactJS",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/femmestem/WhatsGoodHere.git"
+  },
+  "author": "Christine Feaster",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/femmestem/WhatsGoodHere/issues"
+  },
+  "homepage": "https://github.com/femmestem/WhatsGoodHere#readme"
+}
