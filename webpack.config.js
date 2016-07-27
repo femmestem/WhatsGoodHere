@@ -4,14 +4,14 @@ const NODE_ENV = process.env.NODE_ENV;
 const isDev = (NODE_ENV === 'development');
 
 // Path variables 
+const path = require('path'),
+      join = path.join,
+      resolve = path.resolve;
+
 const root = resolve(__dirname);
 const src = join(root, 'src');
 const dest = join(root, 'dist');
 const modules = join(root, 'node_modules');
-
-const path = require('path'),
-      join = path.join,
-      resolve = path.resolve;
 
 // Require Packages
 const webpack = require('webpack');
