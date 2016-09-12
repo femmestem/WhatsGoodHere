@@ -31,6 +31,12 @@ var config = getConfig({
     clearBeforeBuild: true
 });
 
+config.externals = {
+    'react/lib/ReactContext': true,
+    'react/lib/ExecutionEnvironment': true,
+    'react/addons': true
+}
+
 // ==begin ENV variables
 const dotEnvVars = dotenv.config();
 
