@@ -5,7 +5,9 @@ import './app.css'
 const App = React.createClass({
     render: function() {
         return (
-            <div>Hello, world!</div>
+            <div>
+                <h1>Environment: {__NODE_ENV__}</h1>
+            </div>
         );
     }
 });

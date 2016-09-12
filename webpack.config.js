@@ -14,6 +14,7 @@ const dest = join(root, 'dist');
 const modules = join(root, 'node_modules');
 
 // Require Packages
+const dotenv = require('dotenv');
 const webpack = require('webpack');
 const fs = require('fs');
 const getConfig = require('hjs-webpack');
@@ -30,8 +31,39 @@ var config = getConfig({
     clearBeforeBuild: true
 });
 
-// each plugins exported as a function that
-// accepts optional configs, returns a postcss processor
+// ==begin ENV variables
+const dotEnvVars = dotenv.config();
+
+// use env-specific configs at 'config/[env].config.js'
+// to override global env configs at `.env`
+const environmentEnv = dotenv.config({
+    path: join(root, 'config', `${NODE_ENV}.config.js`),
+    silent: true
+});
+const envVariables = Object.assign({}, dotEnvVars, environmentEnv);
+
+// Create config object for DefinePlugin()
+// Stringify env vars to prevent browser JS parser issues
+// with unrecognized chars
+const defines =
+    Object.keys(envVariables)
+    .reduce((memo, key) => {
+        const val = JSON.stringify(envVariables[key]);
+        memo[`__${key.toUpperCase()}__`] = val;
+        return memo;
+        }, {
+            __NODE_ENV__: JSON.stringify(NODE_ENV)
+        }
+    );
+
+config.plugins = [
+    new webpack.DefinePlugin(defines)
+].concat(config.plugins);
+// ==end ENV variables
+
+// ==begin CSS Configs
+// Each plugin exported as a function that accepts
+// optional configs, returns a postcss processor
 config.postcss = [].concat([
     require('precss')({/* options */}),
     require('autoprefixer')({/* options */}),
@@ -78,5 +110,6 @@ config.module.loaders.push({
     include: [modules],
     loader: 'style!css'
 });
+// ==end CSS Configs
 
 module.exports = config;
