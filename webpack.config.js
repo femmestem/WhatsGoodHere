@@ -1,7 +1,9 @@
+require('babel-register');
 const NODE_ENV = process.env.NODE_ENV;
 
 // Set up server without minification, allow hot reloading
 const isDev = (NODE_ENV === 'development');
+const isTest = (NODE_ENV === 'test');
 
 // Path variables 
 const path = require('path'),
@@ -31,10 +33,25 @@ var config = getConfig({
     clearBeforeBuild: true
 });
 
-config.externals = {
-    'react/lib/ReactContext': true,
-    'react/lib/ExecutionEnvironment': true,
-    'react/addons': true
+if (isTest) {
+    // ignore testing framework when bundling dependencies
+    config.externals = {
+        'react/lib/ReactContext': true,
+        'react/lib/ExecutionEnvironment': true,
+        'react/addons': true
+    }
+
+    // filter production plugins
+    config.plugins = config.plugins.filter(p => {
+        const name = p.constructor.toString();
+        const fnName = name.match(/^function (.*)\((.*\))/)
+        const index = [
+            'DedupePlugin',
+            'UglifyJsPlugin'
+        ].indexOf(fnName[1]);
+
+        return index < 0;
+    })
 }
 
 // ==begin ENV variables
